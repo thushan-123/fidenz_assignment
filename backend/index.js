@@ -1,5 +1,5 @@
 import express from 'express';
-import connectDb from "database/db.js"
+import connectDb from "./dbConfig/db.js";
 import helmet from 'helmet';
 import 'dotenv/config'
 import cors from "cors"

@@ -6,7 +6,7 @@ const connectDb = async (uri) => {
     await mongoose.connect(uri, {
         autoIndex: true,
     });
-    console.log("Connected to  mongodb database");
+    console.log("Connected to  mongodb dbConfig");
 }
 
 export default connectDb;
