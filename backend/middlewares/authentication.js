@@ -27,7 +27,7 @@ const permitAccessEndPoints = async (req) => {
 const authentication = async (req, res, next) => {
     try {
 
-        if (permitAccessEndPoints){
+        if (await permitAccessEndPoints(req)){
             return next();
         }
 
