@@ -19,3 +19,5 @@ const fetchWeatherData = async (countryCode) => {
              console.log(error);
          });
 }
+
+export { fetchWeatherData };
