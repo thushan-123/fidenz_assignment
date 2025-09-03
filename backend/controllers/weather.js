@@ -1,8 +1,8 @@
 import {fetchWeatherData} from "../WeatherAPI/weather";
-let cachedWeatherData = null;
-let cacheTime5 = null;
 
-let cacheTimeLive = 5* 60* 1000;
+let cacheTime5Minutes = 5* 60* 1000
+let lastUpdatedTime = 0;
+
 
 const data_list = [
         {"CityCode":"1248991","CityName":"Colombo","Temp":"33.0","Status":"Clouds"},
@@ -29,18 +29,71 @@ const getWeatherData = async () => {
             Status: data.weather[0].description,
         };
     });
-
-    return Promise.all(promises);
+    const updated_data = await Promise.all(promises);
+    lastUpdatedTime = Date.now();
+    return updated_data;
 
 }
 
 const getALLCityCode = async (req,res) => {
     const currentTime = Date.now();
-    if(cachedWeatherData && cacheTime5 && (now - cacheTime5 < cacheTimeLive)){
-
+    if(currentTime - lastUpdatedTime > cacheTime5Minutes) {
+        const new_data_list = await getWeatherData();
+        res.status(200).json({
+            message: 'Weather Data',
+            data: new_data_list,
+        });
     }
     res.status(200).json({
         message: 'Weather Data',
         "data": data_list
     });
 }
+
+export {getALLCityCode}
+
+
+// {
+//     "coord": {
+//     "lon": 79.8478,
+//         "lat": 6.9319
+// },
+//     "weather": [
+//     {
+//         "id": 803,
+//         "main": "Clouds",
+//         "description": "broken clouds",
+//         "icon": "04d"
+//     }
+// ],
+//     "base": "stations",
+//     "main": {
+//     "temp": 299.58,
+//         "feels_like": 299.58,
+//         "temp_min": 299.58,
+//         "temp_max": 299.58,
+//         "pressure": 1009,
+//         "humidity": 85,
+//         "sea_level": 1009,
+//         "grnd_level": 1008
+// },
+//     "visibility": 10000,
+//     "wind": {
+//     "speed": 6.05,
+//         "deg": 236,
+//         "gust": 9.66
+// },
+//     "clouds": {
+//     "all": 53
+// },
+//     "dt": 1756903052,
+//     "sys": {
+//     "country": "LK",
+//         "sunrise": 1756859590,
+//         "sunset": 1756903639
+// },
+//     "timezone": 19800,
+//     "id": 1248991,
+//     "name": "Colombo",
+//     "cod": 200
+// }
