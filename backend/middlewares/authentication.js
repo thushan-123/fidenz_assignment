@@ -1,17 +1,35 @@
 import jwt from 'jsonwebtoken';
 
 
-// [ 'method': 'end point' ]
-// [ {'post' : 'api/v1/login'}, {} , {} ]
+// [ 'method': X , 'end point' : x]
+// [ {method :'post' , path : 'api/v1/login'}, {} , {} ]
 
 const jwtSecret = process.env.JWT_SECRET;
 
-const permitAccessEndPoints = async (permitAccessList) => {
+const permitAccessList = [
+    {
+        method: "POST",
+        path: "/auth/login"
+    },
+    {
+        method: "POST",
+        path: "/auth/register"
+    }
+]
+
+const permitAccessEndPoints = async (req) => {
+    return permitAccessList.some((i) =>
+        i.method.toLowerCase() === req.method.toLowerCase() && i.path === req.path
+    );
 
 }
 
 const authentication = async (req, res, next) => {
     try {
+
+        if (permitAccessEndPoints){
+            return next();
+        }
 
         const header = req.headers.authorization || '';
 
