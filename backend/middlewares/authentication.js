@@ -43,13 +43,18 @@ const authentication = async (req, res, next) => {
         const payload = jwt.verify(token, process.env.JWT_SECRET);
         if (payload) {
             req.user = payload;
-            next();
+            return next();
         }else {
             res.status(401).json({
                 message: 'unauthorized access',
             })
         }
     }catch(e) {
-        console.log(e.message)
+        console.log(e.message);
+        res.status(500).json({
+            "message": "unauthorized access"
+        })
     }
 }
+
+export {authentication}
