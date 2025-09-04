@@ -40,8 +40,10 @@ const authentication = async (req, res, next) => {
                 message: 'unauthorized access',
             })
         }
+        console.log("token", token);
         const payload = jwt.verify(token, process.env.JWT_SECRET);
         if (payload) {
+            console.log("payload", payload);
             req.user = payload;
             return next();
         }else {
