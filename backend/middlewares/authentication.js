@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 
-
+import {genAccessToken} from "../utils/tokens";
 // [ 'method': X , 'end point' : x]
 // [ {method :'post' , path : 'api/v1/login'}, {} , {} ]
 
@@ -17,12 +17,23 @@ const permitAccessList = [
     }
 ]
 
-const permitAccessEndPoints = async (req) => {
-    return permitAccessList.some((i) =>
-        i.method.toLowerCase() === req.method.toLowerCase() && i.path === req.path
-    );
 
-}
+
+const permitAccessEndPoints = async (req) => {
+    return permitAccessList.some((i) => {
+        const methodMatch =
+            i.method.toLowerCase() === "all" ||
+            i.method.toLowerCase() === req.method.toLowerCase();
+
+        const regexPath = new RegExp(
+            "^" + i.path.replace(/\*/g, ".*") + "$"
+        );
+
+        const pathMatch = regexPath.test(req.path);
+
+        return methodMatch && pathMatch;
+    });
+};
 
 const authentication = async (req, res, next) => {
     try {
@@ -52,6 +63,8 @@ const authentication = async (req, res, next) => {
             if (refreshToken) {
                 const validRefreshToken = jwt.verify(token, process.env.JWT_SECRET);
                 if (validRefreshToken) {
+                    const payload = jwt.decode(token).payload;
+                    req.headers.authorization = `Bearer ${await genAccessToken(payload)}`;
                     return next();
                 }
                 res.status(401).json({
