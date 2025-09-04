@@ -47,6 +47,17 @@ const authentication = async (req, res, next) => {
             req.user = payload;
             return next();
         }else {
+            const refreshHeader = req.headers.refresh || '';
+            const refreshToken = refreshHeader.startsWith('refresh ') ? refreshHeader.slice(7) : '';
+            if (refreshToken) {
+                const validRefreshToken = jwt.verify(token, process.env.JWT_SECRET);
+                if (validRefreshToken) {
+                    return next();
+                }
+                res.status(401).json({
+                    message: 'unauthorized access',
+                })
+            }
             res.status(401).json({
                 message: 'unauthorized access',
             })
