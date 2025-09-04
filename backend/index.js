@@ -14,6 +14,11 @@ const app = express();
 app.use(cors());
 app.use(helmet());
 app.use(morgan("dev"));
+
+app.use("/api/v1", (req, res, next) => {
+    next();
+});
+
 app.use(authentication)
 
 app.use(user);
