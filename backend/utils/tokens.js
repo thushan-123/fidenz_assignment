@@ -19,3 +19,5 @@ const generateRefreshToken = async (payload) => {
         }
     )
 }
+
+export {genAccessToken, generateRefreshToken}
