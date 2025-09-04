@@ -4,7 +4,7 @@ import helmet from 'helmet';
 import 'dotenv/config'
 import cors from "cors"
 import morgan from "morgan";
-
+import user from './routes/userRoutes.js';
 import {authentication} from "./middlewares/authentication";
 
 const app = express();
@@ -14,6 +14,8 @@ app.use(cors());
 app.use(helmet());
 app.use(morgan("dev"));
 app.use(authentication)
+
+app.use(user)
 
 
 
