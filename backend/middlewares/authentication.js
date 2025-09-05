@@ -1,24 +1,15 @@
-import jwt from 'jsonwebtoken';
-
-
-import {genAccessToken} from "../utils/tokens.js";
-// [ 'method': X , 'end point' : x]
-// [ {method :'post' , path : 'api/v1/login'}, {} , {} ]
+import jwt from "jsonwebtoken";
+import { genAccessToken } from "../utils/tokens.js";
 
 const jwtSecret = process.env.JWT_SECRET;
+const refreshSecret = process.env.REFRESH_SECRET;
 
 const permitAccessList = [
     {
         method: "POST",
-        path: "/api/v1/user/*"
+        path: "/api/v1/user/*",
     },
-    // {
-    //     method: "POST",
-    //     path: "/api/v1/auth/register"
-    // }
-]
-
-
+];
 
 const permitAccessEndPoints = async (req) => {
     return permitAccessList.some((i) => {
@@ -26,10 +17,7 @@ const permitAccessEndPoints = async (req) => {
             i.method.toLowerCase() === "all" ||
             i.method.toLowerCase() === req.method.toLowerCase();
 
-        const regexPath = new RegExp(
-            "^" + i.path.replace(/\*/g, ".*") + "$"
-        );
-
+        const regexPath = new RegExp("^" + i.path.replace(/\*/g, ".*") + "$");
         const pathMatch = regexPath.test(req.path);
 
         return methodMatch && pathMatch;
@@ -38,58 +26,53 @@ const permitAccessEndPoints = async (req) => {
 
 const authentication = async (req, res, next) => {
     try {
-
-        if (await permitAccessEndPoints(req)){
+        if (await permitAccessEndPoints(req)) {
             return next();
         }
 
-        const header = req.headers.authorization || '';
-
-        const token = header.startsWith('Bearer ') ? header.slice(7) : '';
+        const header = req.headers.authorization || "";
+        const token = header.startsWith("Bearer ") ? header.slice(7) : "";
 
         if (!token) {
-            res.status(401).json({
-                message: 'unauthorized access',
-            })
+            return res.status(401).json({ message: "unauthorized access" });
         }
-        console.log("token", token);
-        const payload = jwt.verify(token, process.env.JWT_SECRET);
-        if (payload) {
-            console.log("payload", payload);
+
+        try {
+            const payload = jwt.verify(token, jwtSecret);
             req.user = payload;
             return next();
-        }else {
-            const refreshToken = req.cookies?.refreshToken || '';
-            //const refreshToken = refreshHeader.startsWith('refresh ') ? refreshHeader.slice(8) : '';
-            if (refreshToken) {
-                const validRefreshToken = jwt.verify(token, process.env.JWT_SECRET);
-                if (validRefreshToken) {
-                    const payload = {
-                        "id" : validRefreshToken._id,
-                        "first_name": validRefreshToken.first_name,
-                        "user_name": validRefreshToken.last_name,
-                        "email": validRefreshToken.email
-                    }
-                    const newAccessToken = `Bearer ${await genAccessToken(
-                        payload
-                    )}`;
-                    res.setHeader("Authorization", `${newAccessToken} `);
-                    return next();
-                }
-                res.status(401).json({
-                    message: 'unauthorized access invalid refresh token',
-                })
-            }
-            res.status(401).json({
-                message: 'unauthorized access refresh token',
-            })
-        }
-    }catch(e) {
-        console.log(e.message);
-        res.status(500).json({
-            "message": "unauthorized access"
-        })
-    }
-}
+        } catch (err) {
+            if (err.name === "TokenExpiredError") {
+                const refreshToken = req.cookies?.refreshToken;
 
-export {authentication}
+                if (!refreshToken) {
+                    return res
+                        .status(401)
+                        .json({ message: "refresh token not found in cookies" });
+                }
+
+                try {
+                    const refreshPayload = jwt.verify(refreshToken, refreshSecret);
+
+                    const newAccessToken = await genAccessToken(refreshPayload);
+                    req.user = refreshPayload;
+
+                    req.headers.authorization = `Bearer ${newAccessToken}`;
+
+                    return next();
+                } catch (refreshErr) {
+                    return res
+                        .status(401)
+                        .json({ message: "unauthorized, invalid refresh token" });
+                }
+            }
+            return res.status(401).json({ message: "unauthorized, invalid token" });
+        }
+    } catch (e) {
+        console.error(e.message);
+        res.status(500).json({ message: "unauthorized access" });
+    }
+};
+
+export { authentication };
+
