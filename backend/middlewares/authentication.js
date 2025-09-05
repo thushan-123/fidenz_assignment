@@ -9,11 +9,11 @@ const jwtSecret = process.env.JWT_SECRET;
 const permitAccessList = [
     {
         method: "POST",
-        path: "/auth/login"
+        path: "/api/v1/auth/login"
     },
     {
         method: "POST",
-        path: "/auth/register"
+        path: "/api/v1/auth/register"
     }
 ]
 
@@ -68,11 +68,11 @@ const authentication = async (req, res, next) => {
                     return next();
                 }
                 res.status(401).json({
-                    message: 'unauthorized access',
+                    message: 'unauthorized access invalid refresh token',
                 })
             }
             res.status(401).json({
-                message: 'unauthorized access',
+                message: 'unauthorized access refresh token',
             })
         }
     }catch(e) {
