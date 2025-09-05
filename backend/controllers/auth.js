@@ -32,8 +32,9 @@ const userLogin = async (req, res) => {
 
     const token = await genAccessToken(payload);
     const refreshToken = await generateRefreshToken(payload);
-    console.log(token)
-    console.log(refreshToken)
+    res.cookie("refreshToken", refreshToken);
+    // console.log(token)
+    // console.log(refreshToken)
     res.status(200).json({
         "message": "logging successfully",
         "token": token,
