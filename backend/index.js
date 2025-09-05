@@ -14,15 +14,16 @@ const app = express();
 app.use(cors());
 app.use(helmet());
 app.use(morgan("dev"));
+app.use(express.json());
 
-app.use("/api/v1", (req, res, next) => {
-    next();
-});
+// app.use("/api/v1", (req, res, next) => {
+//     next();
+// });
 
 //app.use(authentication);
 
-app.use(user);
-app.use(weather);
+app.use("/api/v1" ,user);
+app.use("/api/v1",weather);
 
 
 app.use((req, res, next) => {
@@ -32,13 +33,13 @@ app.use((req, res, next) => {
 })
 
 app.use((err, req, res, next) => {
-    console.error(err.message);
+    console.error(err);
     res.status(500).json({
         "message": "Error occur"
     })
 })
 
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT || 9000;
 const MONGO_URI = process.env.MONGO_URI;
 
 connectDb(MONGO_URI).then(

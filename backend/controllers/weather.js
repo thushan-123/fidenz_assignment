@@ -22,6 +22,15 @@ const getWeatherData = async () => {
         const data = await fetchWeatherData(data_set.CityCode);
         // data_set.Temp = (data.main.temp - 273.15).toFixed(1);
         // data_set.Status = data.weather[0].main;
+        //console.log(data);
+
+        if (!data || !data.main || !data.weather){
+            return {
+                ...data,
+                Temp : data_set.Temp,
+                Status : data_set.Status,
+            }
+        }
 
         return{
             ...data_set,
@@ -39,14 +48,14 @@ const getALLCityCode = async (req,res) => {
     const currentTime = Date.now();
     if(currentTime - lastUpdatedTime > cacheTime5Minutes) {
         const new_data_list = await getWeatherData();
-        res.status(200).json({
-            message: 'Weather Data',
-            data: new_data_list,
+        return res.status(200).json({
+                message: 'Weather Data',
+                data: new_data_list,
         });
     }
-    res.status(200).json({
-        message: 'Weather Data',
-        "data": data_list
+    return res.status(200).json({
+            message: 'Weather Data',
+            "data": data_list
     });
 }
 
