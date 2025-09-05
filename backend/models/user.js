@@ -1,7 +1,5 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
-import {email} from "zod";
-
 
 const userSchema = new mongoose.Schema({
     first_name: {
@@ -15,38 +13,43 @@ const userSchema = new mongoose.Schema({
         trim: true,
     },
     email: {
-        type: email(),
+        type: String,
         required: true,
         unique: true,
+        lowercase: true,
+        trim: true,
+        match: [/^\S+@\S+\.\S+$/, 'Invalid email'],
     },
-
     password: {
         type: String,
+        required: true,
     },
-    authentications: {
-        auth_provider: {
-            auth_provider: {
-                type: String
-            },
-            auth_id: {
-                type: String,
-                unique: true,
-            }
-        }
+    auth_id: {
+        type: String
     }
-}, {
-    timestamps: true
-})
+    // authentications: {
+    //     auth_provider: {
+    //         auth_provider: {
+    //             type: String,
+    //         },
+    //         auth_id: {
+    //             type: String,
+    //         },
+    //     },
+    // },
+}, { timestamps: true });
 
-userSchema.pre('save', async(next) => {
-    if(!this.isModified('password')){
-        this.password = await bcrypt.hash(this.password, 10);
-        next();
+
+userSchema.pre("save", async function (next) {
+    if (!this.isModified("password")) {
+        return next();
     }
-})
+    this.password = await bcrypt.hash(this.password, 10);
+    next();
+});
 
-userSchema.methods.comparePassword = async (password) => {
+userSchema.methods.comparePassword = async function (password) {
     return bcrypt.compare(password, this.password);
-}
+};
 
-export default mongoose.model('User', userSchema);
+export default mongoose.model("User", userSchema);
