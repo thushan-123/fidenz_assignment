@@ -9,12 +9,12 @@ const jwtSecret = process.env.JWT_SECRET;
 const permitAccessList = [
     {
         method: "POST",
-        path: "/api/v1/auth/login"
+        path: "/api/v1/user/*"
     },
-    {
-        method: "POST",
-        path: "/api/v1/auth/register"
-    }
+    // {
+    //     method: "POST",
+    //     path: "/api/v1/auth/register"
+    // }
 ]
 
 
