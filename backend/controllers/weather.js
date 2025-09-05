@@ -26,7 +26,7 @@ const getWeatherData = async () => {
 
         if (!data || !data.main || !data.weather){
             return {
-                ...data,
+                ...data_set,
                 Temp : data_set.Temp,
                 Status : data_set.Status,
             }
