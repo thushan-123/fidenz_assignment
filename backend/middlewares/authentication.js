@@ -2,6 +2,7 @@ import jwt from 'jsonwebtoken';
 
 
 import {genAccessToken} from "../utils/tokens.js";
+import {getALLCityCode} from "../controllers/weather";
 // [ 'method': X , 'end point' : x]
 // [ {method :'post' , path : 'api/v1/login'}, {} , {} ]
 
@@ -70,9 +71,10 @@ const authentication = async (req, res, next) => {
                         "user_name": validRefreshToken.last_name,
                         "email": validRefreshToken.email
                     }
-                    req.headers.authorization = `Bearer ${await genAccessToken(
+                    const newAccessToken = `Bearer ${await genAccessToken(
                         payload
                     )}`;
+                    res.setHeader("Authorization", `${newAccessToken} `);
                     return next();
                 }
                 res.status(401).json({
