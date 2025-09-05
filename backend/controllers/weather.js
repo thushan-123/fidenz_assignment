@@ -1,65 +1,67 @@
-import {fetchWeatherData} from "../WeatherAPI/weather.js";
+import { fetchWeatherData } from "../WeatherAPI/weather.js";
 
-let cacheTime5Minutes = 5* 60* 1000
+let cacheTime5Minutes = 5 * 60 * 1000;
 let lastUpdatedTime = 0;
 
-
 const data_list = [
-        {"CityCode":"1248991","CityName":"Colombo","Temp":"33.0","Status":"Clouds"},
-        {"CityCode":"1850147","CityName":"Tokyo","Temp":"8.6","Status":"Clear"},
-        {"CityCode":"2644210","CityName":"Liverpool","Temp":"16.5","Status":"Rain"},
-        {"CityCode":"2988507","CityName":"Paris","Temp":"22.4","Status":"Clear"},
-        {"CityCode":"2147714","CityName":"Sydney","Temp":"27.3","Status":"Rain"},
-        {"CityCode":"4930956","CityName":"Boston","Temp":"4.2","Status":"Mist"},
-        {"CityCode":"1796236","CityName":"Shanghai","Temp":"10.1","Status":"Clouds"},
-        {"CityCode":"3143244","CityName":"Oslo","Temp":"-3.9","Status":"Clear"}
-    ]
-
+    { "CityCode": "1248991", "CityName": "Colombo", "Temp": "33.0", "Status": "Clouds" },
+    { "CityCode": "1850147", "CityName": "Tokyo", "Temp": "8.6", "Status": "Clear" },
+    { "CityCode": "2644210", "CityName": "Liverpool", "Temp": "16.5", "Status": "Rain" },
+    { "CityCode": "2988507", "CityName": "Paris", "Temp": "22.4", "Status": "Clear" },
+    { "CityCode": "2147714", "CityName": "Sydney", "Temp": "27.3", "Status": "Rain" },
+    { "CityCode": "4930956", "CityName": "Boston", "Temp": "4.2", "Status": "Mist" },
+    { "CityCode": "1796236", "CityName": "Shanghai", "Temp": "10.1", "Status": "Clouds" },
+    { "CityCode": "3143244", "CityName": "Oslo", "Temp": "-3.9", "Status": "Clear" }
+];
+let cache_data = [];
 
 
 const getWeatherData = async () => {
-    const promises = data_list.map(async (data_set) => {
-        const data = await fetchWeatherData(data_set.CityCode);
-        // data_set.Temp = (data.main.temp - 273.15).toFixed(1);
-        // data_set.Status = data.weather[0].main;
-        //console.log(data);
+    cache_data = [];
 
-        if (!data || !data.main || !data.weather){
-            return {
-                ...data_set,
-                Temp : data_set.Temp,
-                Status : data_set.Status,
+    for (const data_set of data_list) {
+        try {
+            const data = await fetchWeatherData(data_set.CityCode);
+            let data_;
+            if (data && data.main && data.weather) {
+                data_ = {
+                    city: data.name,
+                    city_code: data.id,
+                    temp: (data.main.temp - 273.15).toFixed(1),
+                    description: data.weather[0].description,
+                };
+
             }
+            cache_data.push(data_);
+        } catch (err) {
+            console.log(`fetch err ${data_set.CityName}:`);
         }
+    }
+    //console.log(cache_data);
 
-        return{
-            ...data_set,
-            Temp: (data.main.temp - 273.15).toFixed(1),
-            Status: data.weather[0].description,
-        };
-    });
-    const updated_data = await Promise.all(promises);
     lastUpdatedTime = Date.now();
-    return updated_data;
+};
 
-}
 
-const getALLCityCode = async (req,res) => {
+const getALLCityCode = async (req, res) => {
     const currentTime = Date.now();
-    if(currentTime - lastUpdatedTime > cacheTime5Minutes) {
-        const new_data_list = await getWeatherData();
+
+    if (currentTime - lastUpdatedTime > cacheTime5Minutes || cache_data.length === 0) {
+        await getWeatherData();
         return res.status(200).json({
-                message: 'Weather Data',
-                data: new_data_list,
+            message: "Weather Data",
+            data: cache_data,
         });
     }
+
     return res.status(200).json({
-            message: 'Weather Data',
-            "data": data_list
+        message: "Weather Data ",
+        data: cache_data,
     });
 }
 
-export {getALLCityCode}
+export { getALLCityCode };
+
 
 
 // {

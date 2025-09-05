@@ -30,7 +30,7 @@ const userLogin = async (req, res) => {
         "email": user.email
     }
 
-    const token = await generateRefreshToken(payload);
+    const token = await genAccessToken(payload);
     const refreshToken = await generateRefreshToken(payload);
     console.log(token)
     console.log(refreshToken)
