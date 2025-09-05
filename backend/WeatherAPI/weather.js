@@ -14,6 +14,7 @@ const fetchWeatherData = async (countryCode) => {
     return await axios.request(config)
          .then((response) => {
              console.log(JSON.stringify(response.data));
+             return response.data;
          })
          .catch((error) => {
              console.log(error);
