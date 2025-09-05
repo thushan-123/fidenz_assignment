@@ -7,6 +7,7 @@ import morgan from "morgan";
 import user from './routes/userRoutes.js';
 import weather from './routes/weatherRoutes.js';
 import {authentication} from "./middlewares/authentication.js";
+import cookieParser from "cookie-parser";
 
 const app = express();
 
@@ -19,7 +20,7 @@ app.use(express.json());
 // app.use("/api/v1", (req, res, next) => {
 //     next();
 // });
-
+app.use(cookieParser());
 app.use(authentication);
 
 app.use("/api/v1/user" ,user);

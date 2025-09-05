@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 
+
 import {genAccessToken} from "../utils/tokens.js";
 // [ 'method': X , 'end point' : x]
 // [ {method :'post' , path : 'api/v1/login'}, {} , {} ]
