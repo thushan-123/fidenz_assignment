@@ -22,9 +22,18 @@ const userLogin = async (req, res) => {
             "message": "User not found"
         })
     }
+    console.log(user)
+    const payload = {
+        "id" : user._id,
+        "first_name": user.first_name,
+        "user_name": user.last_name,
+        "email": user.email
+    }
 
-    const token = generateRefreshToken(user);
-    const refreshToken = generateRefreshToken(token);
+    const token = await generateRefreshToken(payload);
+    const refreshToken = await generateRefreshToken(payload);
+    console.log(token)
+    console.log(refreshToken)
     res.status(200).json({
         "message": "logging successfully",
         "token": token,
