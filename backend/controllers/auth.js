@@ -48,7 +48,7 @@ const userCreateSchema = z.object({
 })
 
 const createUser = async (req, res) => {
-    const filterData = loginSchema.safeParse(req.body);
+    const filterData = userCreateSchema.safeParse(req.body);
     if (!filterData.success) {
         return res.status(400).json({
             "message": filterData.error

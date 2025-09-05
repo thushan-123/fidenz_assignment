@@ -22,7 +22,7 @@ app.use(express.json());
 
 //app.use(authentication);
 
-app.use("/api/v1" ,user);
+app.use("/api/v1/user" ,user);
 app.use("/api/v1",weather);
 
 
