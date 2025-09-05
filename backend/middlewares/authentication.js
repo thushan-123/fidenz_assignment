@@ -59,13 +59,20 @@ const authentication = async (req, res, next) => {
             req.user = payload;
             return next();
         }else {
-            const refreshHeader = req.headers.refresh || '';
-            const refreshToken = refreshHeader.startsWith('refresh ') ? refreshHeader.slice(7) : '';
+            const refreshToken = req.cookies?.refreshToken || '';
+            //const refreshToken = refreshHeader.startsWith('refresh ') ? refreshHeader.slice(8) : '';
             if (refreshToken) {
                 const validRefreshToken = jwt.verify(token, process.env.JWT_SECRET);
                 if (validRefreshToken) {
-                    const payload = jwt.decode(token).payload;
-                    req.headers.authorization = `Bearer ${await genAccessToken(payload)}`;
+                    const payload = {
+                        "id" : validRefreshToken._id,
+                        "first_name": validRefreshToken.first_name,
+                        "user_name": validRefreshToken.last_name,
+                        "email": validRefreshToken.email
+                    }
+                    req.headers.authorization = `Bearer ${await genAccessToken(
+                        payload
+                    )}`;
                     return next();
                 }
                 res.status(401).json({
