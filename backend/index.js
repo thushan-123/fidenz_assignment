@@ -6,7 +6,7 @@ import cors from "cors"
 import morgan from "morgan";
 import user from './routes/userRoutes.js';
 import weather from './routes/weatherRoutes.js';
-import {authentication} from "./middlewares/authentication";
+import {authentication} from "./middlewares/authentication.js";
 
 const app = express();
 
@@ -19,7 +19,7 @@ app.use("/api/v1", (req, res, next) => {
     next();
 });
 
-app.use(authentication)
+//app.use(authentication);
 
 app.use(user);
 app.use(weather);

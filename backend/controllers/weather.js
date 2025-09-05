@@ -1,4 +1,4 @@
-import {fetchWeatherData} from "../WeatherAPI/weather";
+import {fetchWeatherData} from "../WeatherAPI/weather.js";
 
 let cacheTime5Minutes = 5* 60* 1000
 let lastUpdatedTime = 0;
