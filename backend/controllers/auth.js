@@ -38,7 +38,7 @@ const userLogin = async (req, res) => {
     res.status(200).json({
         "message": "logging successfully",
         "token": token,
-        "refreshToken": refreshToken,
+        // "refreshToken": refreshToken,
         "data": {
             "user" : {
                 id: user._id,
