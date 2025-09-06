@@ -10,15 +10,15 @@ const Register = () => {
     const navigate = useNavigate();
 
     const handleRegister = async (values) => {
-        const { email, password } = values;
+        const { first_name, last_name, email, password } = values;
 
         try {
             if (email && password) {
-                const response = await register_request(email, password);
+                const response = await register_request(first_name, last_name, email, password);
                 console.log("response", response);
                 if(response){
                     message.success("register successful!");
-                    navigate("/");
+                    navigate("/?register=true");
                 }else{
                     console.log("registration failed");
                 }
@@ -63,26 +63,26 @@ const Register = () => {
                         onFinish={handleRegister}
                     >
                         <Form.Item
-                            label="Email"
-                            name="email"
+                            label="First name"
+                            name="first_name"
                             rules={[{ required: true, message: "Please enter your email" }]}
                         >
                             <Input
                                 autoComplete=""
                                 prefix={<UserOutlined />}
-                                placeholder="example@mail.com"
+                                placeholder="john"
                             />
                         </Form.Item>
 
                         <Form.Item
-                            label=""
-                            name="email"
+                            label="Last name"
+                            name="last_name"
                             rules={[{ required: true, message: "Please enter your first name" }]}
                         >
                             <Input
                                 autoComplete=""
                                 prefix={<UserOutlined />}
-                                placeholder="Last name"
+                                placeholder="richerd"
                             />
                         </Form.Item>
 
