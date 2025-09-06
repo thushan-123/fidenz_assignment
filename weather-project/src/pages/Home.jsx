@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { weatherDataFetch } from "../ApiEndpoint/ApiCall.js";
-import { Card, Col, Row, message, Spin } from "antd";
+import { Card, Col, Row, message, Spin, Flex } from "antd";
 import Search from "antd/es/input/Search.js";
-import CloudImage from "./../assets/sun-cloud-weather-for-icon-symbol-web-illustration-free-vector.jpg"
+import CloudImage from "./../assets/sun-cloud-weather-for-icon-symbol-web-illustration-free-vector.jpg";
+import LogoutButton from "../component/LogoutButton.jsx";
 
 const { Meta } = Card;
 
@@ -11,14 +13,28 @@ const Home = () => {
     const [searchValue, setSearchValue] = useState(null);
     const [notFound, setNotFound] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [searchParams] = useSearchParams();
 
+    useEffect(() => {
+        // Check if token is in URL (from Auth0 redirect)
+        const token = searchParams.get("token");
+        if (token) {
+            // Save token to sessionStorage and remove from URL
+            sessionStorage.setItem("token", token);
+            window.history.replaceState({}, document.title, "/home");
+        }
+    }, [searchParams]);
 
     const fetchWeather = async () => {
         setLoading(true);
         try {
-            const fetchWeatherData = await weatherDataFetch(
-                sessionStorage.getItem("token")
-            );
+            const token = sessionStorage.getItem("token");
+            if (!token) {
+                message.error("No authentication token found");
+                return;
+            }
+
+            const fetchWeatherData = await weatherDataFetch(token);
             if (fetchWeatherData && fetchWeatherData.data) {
                 setWeatherData(fetchWeatherData.data);
             } else {
@@ -32,7 +48,6 @@ const Home = () => {
         }
     };
 
-
     useEffect(() => {
         fetchWeather();
 
@@ -41,8 +56,7 @@ const Home = () => {
         }, 300000);
 
         return () => clearInterval(interval);
-    }, []);
-
+    }, [])
 
     const onSearch = (value) => {
         if (!value) {
@@ -65,9 +79,20 @@ const Home = () => {
 
     return (
         <div>
-            <div style={{ display: "flex", justifyContent: "center", marginBottom: 20 }}>
-                <h1>Weather App</h1>
-            </div>
+            <Flex
+                style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    marginBottom: 20,
+                    padding: "0 20px",
+                }}
+            >
+                <h1 style={{ margin: 0, textAlign: "center", flex: 1 }}>Weather App</h1>
+                <div>
+                    <LogoutButton />
+                </div>
+            </Flex>
 
             <div style={{ display: "flex", justifyContent: "center", marginBottom: 20 }}>
                 <Search

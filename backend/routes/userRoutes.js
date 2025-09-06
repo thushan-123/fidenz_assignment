@@ -1,12 +1,11 @@
 import Router from "express";
-import {createUser, userLogin, callBack, logOut} from "../controllers/auth.js";
-import user from "../models/user.js";
+import {createUser, userLogin} from "../controllers/auth.js";
 
 const router = Router();
 
+// JWT
 router.post("/register", createUser);
 router.post("/login", userLogin);
-router.post("/callBack", callBack);
-router.get("/logout", user);
+
 
 export default router;

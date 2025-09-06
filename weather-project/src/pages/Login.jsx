@@ -1,12 +1,26 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { Card, Form, Input, Button, Typography, Flex, message } from "antd";
 import { UserOutlined, LockOutlined, LoginOutlined } from "@ant-design/icons";
-import {login_request} from "../ApiEndpoint/ApiCall.js";
+import { login_request } from "../ApiEndpoint/ApiCall.js";
+import { Link } from "react-router-dom";
 
 const Login = () => {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+
+    useEffect(() => {
+
+        const error = searchParams.get("error");
+        if (error === "auth_failed") {
+            message.error("Authentication failed. Please try again.");
+        }
+    }, [searchParams]);
+
+    const handleAuth0Login = () => {
+        window.location.href = "http://localhost:9000/api/v1/user/auth0/login";
+    };
 
     const handleLogin = async (values) => {
         const { email, password } = values;
@@ -23,7 +37,6 @@ const Login = () => {
                 }else{
                     console.log("Login failed!");
                 }
-
             } else {
                 message.error("validation failed");
             }
@@ -101,9 +114,24 @@ const Login = () => {
                         </Button>
                     </Form.Item>
                 </Form>
+
+                <Button
+                    type="default"
+                    onClick={handleAuth0Login}
+                    block
+                    style={{ marginBottom: 12 }}
+                >
+                    Login with Auth0
+                </Button>
+
+                <Typography.Text>
+                    Don't have an account? <Link to="/register">Register here</Link>
+                </Typography.Text>
             </Card>
         </div>
     );
 };
 
 export default Login;
+
+

@@ -9,6 +9,22 @@ const permitAccessList = [
         method: "POST",
         path: "/api/v1/user/*",
     },
+    {
+        method: "all",
+        path: "/api/v1/user/auth0/*",
+    },
+    {
+        method: "GET",
+        path: "/api/v1/user/auth0/login",
+    },
+    {
+        method: "GET",
+        path: "/api/v1/user/auth0/callback",
+    },
+    {
+        method: "GET",
+        path: "/api/v1/user/auth0/logout",
+    }
 ];
 
 const permitAccessEndPoints = async (req) => {
@@ -29,6 +45,18 @@ const authentication = async (req, res, next) => {
         if (await permitAccessEndPoints(req)) {
             return next();
         }
+
+
+        if (req.isAuthenticated()) {
+            req.user = {
+                id: req.user._id,
+                email: req.user.email,
+                first_name: req.user.first_name,
+                last_name: req.user.last_name
+            };
+            return next();
+        }
+
 
         const header = req.headers.authorization || "";
         const token = header.startsWith("Bearer ") ? header.slice(7) : "";
