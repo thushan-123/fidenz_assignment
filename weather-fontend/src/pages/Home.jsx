@@ -25,7 +25,7 @@ const Home = () => {
             <p>Welcome! You are now logged in.</p>
             {
                 weatherData.map((data,index) => ({
-
+                    
                 }
                 ))
             }

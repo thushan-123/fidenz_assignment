@@ -89,4 +89,8 @@ const createUser = async (req, res) => {
     })
 }
 
-export {userLogin, createUser}
+const callBack = async (req, res) => {}
+
+const logOut = async (req, res) => {}
+
+export {userLogin, createUser, logOut, callBack}

@@ -7,6 +7,7 @@ import {register_request} from "../ApiEndpoint/ApiCall.js";
 
 const Register = () => {
 
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
     const handleRegister = async (values) => {
@@ -14,23 +15,26 @@ const Register = () => {
 
         try {
             if (email && password) {
+                setLoading(true);
                 const response = await register_request(first_name, last_name, email, password);
                 console.log("response", response);
                 if(response){
                     message.success("register successful!");
                     navigate("/?register=true");
                 }else{
-                    console.log("registration failed");
+                    message.error("Registration failed");
                 }
-
             } else {
-                message.error("validation failed");
+                message.error("Validation failed");
             }
         } catch (error) {
             console.error(error);
             message.error("Register failed");
+        } finally {
+            setLoading(false);
         }
     };
+
     return (
         <>
             <div
@@ -65,25 +69,17 @@ const Register = () => {
                         <Form.Item
                             label="First name"
                             name="first_name"
-                            rules={[{ required: true, message: "Please enter your email" }]}
+                            rules={[{ required: true, message: "Please enter your first name" }]}
                         >
-                            <Input
-                                autoComplete=""
-                                prefix={<UserOutlined />}
-                                placeholder="john"
-                            />
+                            <Input prefix={<UserOutlined />} placeholder="John" />
                         </Form.Item>
 
                         <Form.Item
                             label="Last name"
                             name="last_name"
-                            rules={[{ required: true, message: "Please enter your first name" }]}
+                            rules={[{ required: true, message: "Please enter your last name" }]}
                         >
-                            <Input
-                                autoComplete=""
-                                prefix={<UserOutlined />}
-                                placeholder="richerd"
-                            />
+                            <Input prefix={<UserOutlined />} placeholder="Richard" />
                         </Form.Item>
 
                         <Form.Item
@@ -111,15 +107,17 @@ const Register = () => {
                         </Form.Item>
 
                         <Form.Item style={{ marginTop: 12 }}>
-                            <Button
-                                type="primary"
-                                htmlType="submit"
-                                icon={<LoginOutlined />}
-                                loading={loading}
-                                block
-                            >
-                                Sign in
-                            </Button>
+                            <Typography.Text type="secondary">Create an account to continue</Typography.Text>
+
+                        <Button
+                            type="primary"
+                            htmlType="submit"
+                            icon={<LoginOutlined />}
+                            loading={loading}
+                            block
+                        >
+                            Sign up
+                        </Button>
                         </Form.Item>
                     </Form>
                 </Card>
