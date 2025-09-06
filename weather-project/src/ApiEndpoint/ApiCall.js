@@ -54,13 +54,14 @@ const register_request = async (first_name, last_name, email, password) => {
     }
 }
 
-const weatherDataFetch = async () => {
+const weatherDataFetch = async (token) => {
 
     const configuration = {
         method: "GET",
-        url: 'http://localhost:9000/api/v1/weather',
+        url: 'http://localhost:9000/api/v1/getAllWeather',
         headers: {
             "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
         }
     }
 
