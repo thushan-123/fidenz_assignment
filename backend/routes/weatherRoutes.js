@@ -4,6 +4,6 @@ import Router from "express";
 
 const router = Router();
 
-router.get('/getAllWeather', getALLCityCode);
+router.get('', getALLCityCode);
 
 export default router;
