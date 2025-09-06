@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { weatherDataFetch } from "../ApiEndpoint/ApiCall.js";
 import { Card, Col, Row, message, Spin } from "antd";
 import Search from "antd/es/input/Search.js";
+import CloudImage from "./../assets/sun-cloud-weather-for-icon-symbol-web-illustration-free-vector.jpg"
 
 const { Meta } = Card;
 
@@ -93,7 +94,7 @@ const Home = () => {
                         cover={
                             <img
                                 alt={searchValue.city}
-                                src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
+                                src={CloudImage}
                             />
                         }
                     >
@@ -113,7 +114,7 @@ const Home = () => {
                                 cover={
                                     <img
                                         alt={data.city}
-                                        src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
+                                        src={CloudImage}
                                     />
                                 }
                             >
