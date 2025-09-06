@@ -54,6 +54,25 @@ const register_request = async (first_name, last_name, email, password) => {
     }
 }
 
+const weatherDataFetch = async () => {
 
-export {login_request, register_request}
+    const configuration = {
+        method: "GET",
+        url: 'http://localhost:9000/api/v1/weather',
+        headers: {
+            "Content-Type": "application/json",
+        }
+    }
+
+    try{
+        const response = await axios.request(configuration);
+        console.log(response)
+        return response.data;
+    }catch(e){
+        console.log(e.message);
+        return null;
+    }
+}
+
+export {login_request, register_request,weatherDataFetch}
 
