@@ -1,5 +1,4 @@
 import axios from "axios";
-import Login from "./pages/Login.jsx";
 
 const login_request = async (email, password) => {
 
@@ -27,5 +26,7 @@ const login_request = async (email, password) => {
     }
 }
 
-export {login_request}
+const register_request = async (email, password) => {}
+
+export {login_request, register_request}
 

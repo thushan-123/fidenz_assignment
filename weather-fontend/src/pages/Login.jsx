@@ -2,21 +2,30 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, Form, Input, Button, Typography, Flex, message } from "antd";
 import { UserOutlined, LockOutlined, LoginOutlined } from "@ant-design/icons";
+import {login_request} from "../ApiEndpoint/ApiCall.js";
 
 const Login = () => {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
-    const handleFinish = async (values) => {
+    const handleLogin = async (values) => {
         const { email, password } = values;
         setLoading(true);
 
         try {
-            if (email === "test@mail.com" && password === "123456") {
-                message.success("Login successful!");
-                navigate("/");
+            if (email && password) {
+                const response = await login_request(email, password);
+                console.log("response", response);
+                if(response){
+                    message.success("Login successful!");
+                    sessionStorage.setItem("token", response.token);
+                    navigate("/home");
+                }else{
+                    console.log("Login failed!");
+                }
+
             } else {
-                message.error("Invalid email or password");
+                message.error("validation failed");
             }
         } catch (error) {
             console.error(error);
@@ -54,7 +63,7 @@ const Login = () => {
                     layout="vertical"
                     size="large"
                     requiredMark={false}
-                    onFinish={handleFinish}
+                    onFinish={handleLogin}
                 >
                     <Form.Item
                         label="Email"
