@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import Login from "./pages/Login"
 import Home from "./pages/Home";
 import Register from "./pages/Register";
+import ProtectPage from "./component/ProtectPage.jsx";
 
 
 
@@ -13,7 +14,12 @@ function App() {
       <Router>
           <Routes>
               <Route path="/" element={<Login />} />
-              <Route path="/home" element={<Home />} />
+              <Route path="/home" element={
+                  <ProtectPage>
+                      <Home />
+                  </ProtectPage>
+
+              } />
               <Route path="/register" element={<Register />} />
           </Routes>
       </Router>
