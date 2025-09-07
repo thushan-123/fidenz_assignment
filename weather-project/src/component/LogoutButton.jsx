@@ -5,13 +5,13 @@ import axios from "axios";
 const LogoutButton = () => {
     const navigate = useNavigate();
 
-    const onLogout = () => {
+    const onLogout = async () => {
 
         sessionStorage.removeItem('token');
         sessionStorage.removeItem('userId');
         if(sessionStorage.getItem("auth0")){
             try{
-                axios.get("http://localhost:9000api/v1/user/auth0/logout")
+                await axios.get("http://localhost:9000api/v1/user/auth0/logout")
             }catch(e){
                 console.log(e);
             }finally {
