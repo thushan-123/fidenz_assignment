@@ -126,6 +126,12 @@ const Login = () => {
 
                 <Typography.Text>
                     Don't have an account? <Link to="/register">Register here</Link>
+                <br/>
+                    <Link
+                        to="http://localhost:9000/api/v1/user/auth0/login"
+                    >
+                        Authenticate here
+                    </Link>
                 </Typography.Text>
             </Card>
         </div>

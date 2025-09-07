@@ -78,8 +78,8 @@ router.get("/callback", async (req, res) => {
 
         }
 
-        const token = genAccessToken(data)
-        const url =  `https://localhost:5173/login?token=${token}`
+        const token = await genAccessToken(data)
+        const url =  `http://localhost:5173/redir?token=${token}`
 
         res.redirect(url);
 

@@ -22,7 +22,7 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(cookieParser());
 
-app.use(authentication);
+//app.use(authentication);
 
 // Routes
 app.use("/api/v1/user/auth0", auth0Routes);

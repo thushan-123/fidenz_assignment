@@ -5,11 +5,11 @@ const jwtSecret = process.env.JWT_SECRET;
 const refreshSecret = process.env.REFRESH_SECRET;
 
 const permitAccessList = [
-    { method: "POST", path: "/api/v1/user/*" },
-    { method: "ALL", path: "/api/v1/user/auth0/*" },
-    { method: "GET", path: "/api/v1/user/auth0/login" },
-    { method: "GET", path: "/api/v1/user/auth0/callback" },
-    { method: "GET", path: "/api/v1/user/auth0/logout" },
+    { method: "POST", path: "/user/*" },
+    { method: "ALL", path: "/user/auth0/*" },
+    { method: "GET", path: "/user/auth0/login" },
+    { method: "GET", path: "/user/auth0/callback" },
+    { method: "GET", path: "/user/auth0/logout" },
 ];
 
 const permitAccessEndPoints = (req) => {

@@ -14,6 +14,7 @@ function App() {
       <Router>
           <Routes>
               <Route path="/" element={<Login />} />
+              <Route path="/redir" element={<Redirect />} />
               <Route path="/home" element={
                   <ProtectPage>
                       <Home />
