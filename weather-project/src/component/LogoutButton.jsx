@@ -1,12 +1,24 @@
 import { Button, Flex } from 'antd';
 import {useNavigate} from "react-router-dom";
+import axios from "axios";
 
 const LogoutButton = () => {
     const navigate = useNavigate();
 
     const onLogout = () => {
+
         sessionStorage.removeItem('token');
         sessionStorage.removeItem('userId');
+        if(sessionStorage.getItem("auth0")){
+            try{
+                axios.get("http://localhost:9000api/v1/user/auth0/logout")
+            }catch(e){
+                console.log(e);
+            }finally {
+                sessionStorage.removeItem('auth0');
+            }
+        }
+
         navigate('/');
     }
     return (

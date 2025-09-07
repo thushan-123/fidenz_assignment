@@ -79,7 +79,7 @@ router.get("/callback", async (req, res) => {
         }
 
         const token = await genAccessToken(data)
-        const url =  `http://localhost:5173/redir?token=${token}`
+        const url =  `http://localhost:5173/redir?token=${token}&auth0=1`;
 
         res.redirect(url);
 
@@ -90,8 +90,16 @@ router.get("/callback", async (req, res) => {
 });
 
 
-router.post("/logout", async (req, res) => {
+router.get("/logout", async (req, res) => {
+    try {
+        const returnTo = "https://localhost:5173/";
+        const logoutURL = `https://${AUTH0_DOMAIN}/v2/logout?client_id=${AUTH0_CLIENT_ID}&returnTo=${encodeURIComponent(returnTo)}`;
 
-})
+        res.redirect(logoutURL);
+    } catch (err) {
+        console.error("Logout error:", err.message);
+        res.status(500).json({ error: "Logout failed" });
+    }
+});
 
 export default router;
