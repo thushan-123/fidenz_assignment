@@ -8,6 +8,7 @@ import userRoutes from './routes/userRoutes.js';
 import weatherRoutes from './routes/weatherRoutes.js';
 import cookieParser from "cookie-parser";
 import auth0Routes from "./routes/auth0.js";
+import {authentication} from "./middlewares/authentication.js";
 
 const app = express();
 
@@ -21,7 +22,7 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(cookieParser());
 
-//app.use(authentication);
+app.use(authentication);
 
 // Routes
 app.use("/api/v1/user/auth0", auth0Routes);
