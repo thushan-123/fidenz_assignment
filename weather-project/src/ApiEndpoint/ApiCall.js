@@ -9,7 +9,7 @@ const login_request = async (email, password) => {
 
     let configuration = {
         method: "POST",
-        url: 'http://localhost:9000/api/v1/user/login',
+        url: 'http://localhost:9000/api/v1/user/jwt/login',
         headers: {
             "Content-Type": "application/json",
         },
@@ -37,7 +37,7 @@ const register_request = async (first_name, last_name, email, password) => {
 
     let configuration = {
         method: "POST",
-        url: 'http://localhost:9000/api/v1/user/register',
+        url: 'http://localhost:9000/api/v1/user/jwt/register',
         headers: {
             "Content-Type": "application/json",
         },
