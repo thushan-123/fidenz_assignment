@@ -36,6 +36,7 @@ const Login = () => {
                     navigate("/home");
                 }else{
                     console.log("Login failed!");
+                    window.alert("login fail")
                 }
             } else {
                 message.error("validation failed");
