@@ -3,7 +3,7 @@
 
 ```
 PORT=9000
-MONGO_URI=mongodb://localhost:27017/fidenz
+MONGO_URI=mongodb://localhost:27017/db_weather
 WEATHER_API_KEY=
 WEATHER_API_KEY_NAME=
 JWT_SECRET=
